@@ -14,6 +14,7 @@ import {
 } from "material-react-table";
 import { createSearchParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import InfoModal from "../components/InfoModal";
 
 type Coordinates = {
   lat: number;
@@ -29,14 +30,12 @@ type CountryData = {
 };
 
 function CountriesTable() {
-  React.useEffect(() => {
-    const welcome = localStorage.getItem("welcome");
-    if (!welcome) {
-      localStorage.setItem("welcome", "done");
-      toast.success("Welcome");
-    }
-  }, []);
   const [page, setPage] = React.useState(0);
+  const [open, setOpen] = React.useState(false);
+  React.useEffect(() => {
+    const modal = localStorage.getItem("modal");
+    if (!modal) setOpen(true);
+  }, []);
   const navigate = useNavigate();
   const [search, setSearch] = React.useState<string | undefined>("");
   const [tableData, setTableData] = React.useState<CountryData[]>([]);
@@ -210,6 +209,7 @@ function CountriesTable() {
 
   return (
     <Box sx={{ height: "100vh", overflow: "hidden" }}>
+      <InfoModal open={open} setOpen={setOpen} />
       <MaterialReactTable table={table} />
     </Box>
   );
