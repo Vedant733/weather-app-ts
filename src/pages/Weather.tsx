@@ -23,6 +23,29 @@ import {
 import React, { ReactNode } from "react";
 import { toast } from "react-toastify";
 
+type MainWeather = {
+  id: number;
+  main: string;
+  icon: string;
+};
+
+type WeatherResponse = {
+  base: string;
+  clouds: {
+    all: number;
+  };
+  main: {
+    feels_like: number;
+    temp_max: number;
+    pressure: number;
+    humidity: number;
+  };
+  name: string;
+  visibility: string;
+  wind: { speed: number };
+  weather: MainWeather[];
+};
+
 function Weather() {
   const [params] = useSearchParams();
   const navigate = useNavigate();
@@ -36,8 +59,8 @@ function Weather() {
   }, []);
 
   const [unit, setUnit] = React.useState("K");
-  const getCurrentUnit = (input: number) => {
-    if (!unit) return input;
+  const getCurrentUnit = (input: number | undefined) => {
+    if (!input) return input;
     if (unit === "K")
       return (
         <>
@@ -55,7 +78,7 @@ function Weather() {
   const { data, isLoading } = useQuery(
     "WEATHER" + params.get("lat") + params.get("lon"),
     () => {
-      return axios.get(
+      return axios.get<WeatherResponse>(
         `https://api.openweathermap.org/data/2.5/weather?lat=${params.get(
           "lat"
         )}&lon=${params.get("lon")}&appid=${API_KEY}`
@@ -138,7 +161,7 @@ function Weather() {
             <Typography
               sx={{ fontSize: { xs: "48px", sm: "62px" }, fontWeight: 500 }}
             >
-              {getCurrentUnit(data?.data?.main?.feels_like)}
+              {getCurrentUnit(data?.data?.main.feels_like)}
             </Typography>
             <Typography sx={{ fontSize: { xs: "24px", sm: "32px" } }}>
               {data?.data?.weather[0].main}
@@ -233,7 +256,7 @@ function Weather() {
 interface Props {
   title: string;
   value: ReactNode;
-  bgColor: number;
+  bgColor: number | undefined;
 }
 
 function WrapperCard(props: Props) {

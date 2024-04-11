@@ -23,8 +23,8 @@ const days = [
   "Saturday",
 ];
 
-export const getColorFromWeatherId = (id: number): string => {
-  if (isNaN(id)) return "white";
+export const getColorFromWeatherId = (id: number | undefined): string => {
+  if (!id || isNaN(id)) return "white";
   if (id === 800) return WEATHER_COLOR_CODE[id];
   return WEATHER_COLOR_CODE[Math.floor(id / 100)];
 };
