@@ -51,7 +51,8 @@ export default function InfoModal({ open, setOpen }: Props) {
           sx={{ m: 2, textAlign: "center" }}
         >
           Search for your city using the search bar at the top, clicking on the
-          name of the city will take you to weather summary page for that city.
+          name of the city will take you to weather summary page for that
+          city.Right Clicking the name will open up a new tab.
         </Typography>
         <Button variant="contained" onClick={handleClose}>
           Continue

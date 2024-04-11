@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useQuery } from "react-query";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { API_KEY } from "../Constants";
@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import { ClipLoader } from "react-spinners";
 import {
+  CustomError,
   getColorFromWeatherId,
   getTimeOfTheDay,
   getToday,
@@ -85,9 +86,9 @@ function Weather() {
       );
     },
     {
-      onError: () => {
+      onError: (err: AxiosError<CustomError>) => {
         navigate("/");
-        toast.error("Something Went Wrong.");
+        toast.error(err.message, { toastId: "weatherError" });
       },
     }
   );

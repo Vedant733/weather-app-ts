@@ -60,3 +60,7 @@ export function celsiusToKelvin(celsius: number) {
 export function kelvinToCelsius(kelvin: number) {
   return kelvin - 273.15;
 }
+export interface CustomError {
+  code: string;
+  message: string;
+}

@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useQuery } from "react-query";
 import { COUNTRY_TABLE_URL, TABLE_DATA_LIMIT } from "../Constants";
 import { Box, Typography } from "@mui/material";
@@ -15,6 +15,7 @@ import {
 import { createSearchParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import InfoModal from "../components/InfoModal";
+import { CustomError } from "../ExtraFunctions";
 
 type Coordinates = {
   lat: number;
@@ -27,6 +28,11 @@ type CountryData = {
   timezone: string;
   population: number;
   coordinates: Coordinates;
+};
+
+type CountryResponse = {
+  total_count: number;
+  results: CountryData[];
 };
 
 function CountriesTable() {
@@ -68,6 +74,17 @@ function CountriesTable() {
                     lon: lon.toString(),
                   }).toString(),
                 });
+              }}
+              onContextMenu={() => {
+                const { lat, lon } = props.row.original.coordinates;
+                if (!lat || !lon) return alert("Invalid coordinates.");
+                const url = new URL(window.location.origin + "/weather");
+                const params = new URLSearchParams({
+                  lat: lat.toString(),
+                  lon: lon.toString(),
+                });
+                url.search = params.toString();
+                window.open(url, "_blank");
               }}
               sx={{ cursor: "pointer", padding: "1rem" }}
             >
@@ -135,7 +152,7 @@ function CountriesTable() {
           `${orderBy[0].id}${orderBy[0].desc ? " DESC" : ""}`
         );
       url.searchParams.set("offset", page * TABLE_DATA_LIMIT + "");
-      return axios.get(url.href);
+      return axios.get<CountryResponse>(url.href);
     },
     {
       onSuccess(data) {
@@ -144,8 +161,8 @@ function CountriesTable() {
           ...(data?.data?.results as CountryData[]),
         ]);
       },
-      onError() {
-        toast.error("Something Went Wrong.");
+      onError(err: AxiosError<CustomError>) {
+        toast.error(err.message, { toastId: "cTable" });
       },
     }
   );
@@ -158,7 +175,7 @@ function CountriesTable() {
         if (
           scrollHeight - scrollTop - clientHeight < 300 &&
           !isFetching &&
-          (page + 1) * TABLE_DATA_LIMIT < data?.data?.total_count
+          (page + 1) * TABLE_DATA_LIMIT < (data?.data?.total_count ?? 0)
         ) {
           setPage((prev) => prev + 1);
           refetch();
