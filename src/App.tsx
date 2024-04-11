@@ -4,6 +4,8 @@ import CountriesTable from "./pages/CountriesTable";
 import { QueryClient, QueryClientProvider } from "react-query";
 import Weather from "./pages/Weather";
 import { ThemeProvider, createTheme } from "@mui/material";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -33,6 +35,7 @@ const theme = createTheme({
 function App() {
   return (
     <ThemeProvider theme={theme}>
+      <ToastContainer />
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <Routes>

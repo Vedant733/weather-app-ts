@@ -21,6 +21,7 @@ import {
   kelvinToCelsius,
 } from "../ExtraFunctions";
 import React, { ReactNode } from "react";
+import { toast } from "react-toastify";
 
 function Weather() {
   const [params] = useSearchParams();
@@ -28,11 +29,12 @@ function Weather() {
   React.useEffect(() => {
     const lat = params.get("lat");
     const lon = params.get("lon");
-    console.log(lat, lon);
-
-    // if (!lat || !lon || isNaN(parseFloat(lat)) || isNaN(parseFloat(lon)))
-    // navigate("/");
+    if (!lat || !lon || isNaN(parseFloat(lat)) || isNaN(parseFloat(lon))) {
+      toast.error("Something Went Wrong.");
+      navigate("/");
+    }
   }, []);
+
   const [unit, setUnit] = React.useState("K");
   const getCurrentUnit = (input: number) => {
     if (!unit) return input;
@@ -58,13 +60,28 @@ function Weather() {
           "lat"
         )}&lon=${params.get("lon")}&appid=${API_KEY}`
       );
+    },
+    {
+      onError: () => {
+        navigate("/");
+        toast.error("Something Went Wrong.");
+      },
     }
   );
 
   return (
     <>
       {isLoading ? (
-        <ClipLoader size={50} color="blue" />
+        <Box
+          sx={{
+            width: "100vw",
+            height: "100vh",
+            display: "grid",
+            placeItems: "center",
+          }}
+        >
+          <ClipLoader size={50} color="blue" />
+        </Box>
       ) : (
         <Box
           sx={{
@@ -118,23 +135,29 @@ function Weather() {
                 height="100%"
               />
             </Box>
-            <Typography sx={{ fontSize: "62px", fontWeight: 500 }}>
-              {getCurrentUnit(data?.data?.main.temp)}
+            <Typography
+              sx={{ fontSize: { xs: "48px", sm: "62px" }, fontWeight: 500 }}
+            >
+              {getCurrentUnit(data?.data?.main?.feels_like)}
             </Typography>
-            <Typography sx={{ fontSize: "32px" }}>
+            <Typography sx={{ fontSize: { xs: "24px", sm: "32px" } }}>
               {data?.data?.weather[0].main}
             </Typography>
             <Divider sx={{ width: "100%", margin: "12px 0px" }} />
             <Typography>{getToday()}</Typography>
-            <Typography sx={{ fontSize: "20px", fontWeight: 500 }}>
+            <Typography
+              sx={{ fontSize: { xs: "16px", sm: "20px" }, fontWeight: 500 }}
+            >
               {getTodayDay()}
             </Typography>
-            <Typography sx={{ fontSize: "20px", fontWeight: 500 }}>
+            <Typography
+              sx={{ fontSize: { xs: "16px", sm: "20px" }, fontWeight: 500 }}
+            >
               {getTimeOfTheDay()}
             </Typography>
             <Typography
               sx={{
-                fontSize: "48px",
+                fontSize: { xs: "32px", sm: "48px" },
                 fontWeight: 500,
                 width: "100%",
                 textAlign: "center",
@@ -149,7 +172,8 @@ function Weather() {
               width: { xs: "100%", md: "70%" },
               background:
                 getColorFromWeatherId(data?.data?.weather[0].id) + "40",
-              padding: "32px",
+              padding: "24px",
+              paddingTop: 0,
             }}
           >
             <Typography

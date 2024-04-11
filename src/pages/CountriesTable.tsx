@@ -13,6 +13,7 @@ import {
   type MRT_RowVirtualizer,
 } from "material-react-table";
 import { createSearchParams, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 type Coordinates = {
   lat: number;
@@ -28,6 +29,13 @@ type CountryData = {
 };
 
 function CountriesTable() {
+  React.useEffect(() => {
+    const welcome = localStorage.getItem("welcome");
+    if (!welcome) {
+      localStorage.setItem("welcome", "done");
+      toast.success("Welcome");
+    }
+  }, []);
   const [page, setPage] = React.useState(0);
   const navigate = useNavigate();
   const [search, setSearch] = React.useState<string | undefined>("");
@@ -57,8 +65,8 @@ function CountriesTable() {
                 navigate({
                   pathname: "/weather",
                   search: createSearchParams({
-                    lat,
-                    lon,
+                    lat: lat.toString(),
+                    lon: lon.toString(),
                   }).toString(),
                 });
               }}
@@ -137,6 +145,9 @@ function CountriesTable() {
           ...(data?.data?.results as CountryData[]),
         ]);
       },
+      onError() {
+        toast.error("Something Went Wrong.");
+      },
     }
   );
 
@@ -162,12 +173,13 @@ function CountriesTable() {
     columns: COLUMNS,
     data: tableData,
     enablePagination: false,
+    enableBottomToolbar: false,
     enableRowNumbers: true,
     manualFiltering: false,
     manualSorting: true,
     muiTableContainerProps: {
       ref: tableRef, //get access to the table container element
-      sx: { height: "600px" }, //give the table a max height
+      sx: { height: "100vh" }, //give the table a max height
       onScroll: (event: UIEvent<HTMLDivElement>) =>
         fetchMoreOnBottomReached(event.target as HTMLDivElement), //add an event listener to the table container element
     },
@@ -197,12 +209,7 @@ function CountriesTable() {
   });
 
   return (
-    <Box>
-      <Typography
-        sx={{ fontSize: "20px", textAlign: "center", marginTop: "12px" }}
-      >
-        Cities
-      </Typography>
+    <Box sx={{ height: "100vh", overflow: "hidden" }}>
       <MaterialReactTable table={table} />
     </Box>
   );
