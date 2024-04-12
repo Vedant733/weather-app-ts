@@ -189,13 +189,12 @@ function CountriesTable() {
     columns: COLUMNS,
     data: tableData,
     enablePagination: false,
-    enableBottomToolbar: false,
     enableRowNumbers: true,
     manualFiltering: false,
     manualSorting: true,
     muiTableContainerProps: {
       ref: tableRef, //get access to the table container element
-      sx: { height: "100vh" }, //give the table a max height
+      sx: { height: "80vh", maxHeight: "800px", marginBottom: "24px" }, //give the table a max height
       onScroll: (event: UIEvent<HTMLDivElement>) =>
         fetchMoreOnBottomReached(event.target as HTMLDivElement), //add an event listener to the table container element
     },
@@ -225,7 +224,7 @@ function CountriesTable() {
   });
 
   return (
-    <Box sx={{ height: "100vh", overflow: "hidden" }}>
+    <Box sx={{ overflow: "hidden" }}>
       <InfoModal open={open} setOpen={setOpen} />
       <MaterialReactTable table={table} />
     </Box>

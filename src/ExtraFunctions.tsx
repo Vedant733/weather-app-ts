@@ -1,3 +1,4 @@
+import { getCountry } from "countries-and-timezones";
 import { WEATHER_COLOR_CODE } from "./Constants";
 const months = [
   "January",
@@ -29,20 +30,32 @@ export const getColorFromWeatherId = (id: number | undefined): string => {
   return WEATHER_COLOR_CODE[Math.floor(id / 100)];
 };
 
-export const getToday = () => {
-  const date = new Date();
+export const getToday = (country: string) => {
+  const date = new Date(
+    new Date().toLocaleString("en-EN", {
+      timeZone: getCountry(country)?.timezones[0],
+    })
+  );
   return (
     date.getDate() + "-" + months[date.getMonth()] + "-" + date.getFullYear()
   );
 };
 
-export const getTodayDay = () => {
-  const date = new Date();
+export const getTodayDay = (country: string) => {
+  const date = new Date(
+    new Date().toLocaleString("en-EN", {
+      timeZone: getCountry(country)?.timezones[0],
+    })
+  );
   return days[date.getDay()] + ", " + date.getHours() + ":" + date.getMinutes();
 };
 
-export const getTimeOfTheDay = () => {
-  const currentHour = new Date().getHours();
+export const getTimeOfTheDay = (country: string) => {
+  const currentHour = new Date(
+    new Date().toLocaleString("en-EN", {
+      timeZone: getCountry(country)?.timezones[0],
+    })
+  ).getHours();
   if (currentHour >= 5 && currentHour < 12) {
     return "Morning";
   } else if (currentHour >= 12 && currentHour < 17) {

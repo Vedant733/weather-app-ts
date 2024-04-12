@@ -45,6 +45,9 @@ type WeatherResponse = {
   visibility: string;
   wind: { speed: number };
   weather: MainWeather[];
+  sys: {
+    country: string;
+  };
 };
 
 function Weather() {
@@ -168,16 +171,18 @@ function Weather() {
               {data?.data?.weather[0].main}
             </Typography>
             <Divider sx={{ width: "100%", margin: "12px 0px" }} />
-            <Typography>{getToday()}</Typography>
-            <Typography
-              sx={{ fontSize: { xs: "16px", sm: "20px" }, fontWeight: 500 }}
-            >
-              {getTodayDay()}
+            <Typography>
+              {getToday(data?.data?.sys?.country ?? "IN")}
             </Typography>
             <Typography
               sx={{ fontSize: { xs: "16px", sm: "20px" }, fontWeight: 500 }}
             >
-              {getTimeOfTheDay()}
+              {getTodayDay(data?.data?.sys?.country ?? "IN")}
+            </Typography>
+            <Typography
+              sx={{ fontSize: { xs: "16px", sm: "20px" }, fontWeight: 500 }}
+            >
+              {getTimeOfTheDay(data?.data?.sys?.country ?? "IN")}
             </Typography>
             <Typography
               sx={{
