@@ -1,5 +1,3 @@
-import { getTimeOfTheDay } from "./ExtraFunctions";
-
 export const TABLE_DATA_LIMIT = 15;
 export const COUNTRY_TABLE_URL =
   "https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/geonames-all-cities-with-a-population-1000/records";
@@ -14,6 +12,6 @@ export const WEATHER_COLOR_CODE: WeatherColorCode = {
   5: "#1b1b51",
   6: "#ffffff",
   7: "#684d4d",
-  800: getTimeOfTheDay() === "Night" ? "#000000" : "#b17507",
-  8: getTimeOfTheDay() === "Night" ? "#646464" : "#958c77",
+  800: "#b17507",
+  8: "#958c77",
 };

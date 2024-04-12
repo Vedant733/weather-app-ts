@@ -134,7 +134,7 @@ function CountriesTable() {
     setPage(0);
   };
 
-  const { data, isFetching, isError, refetch, isRefetching } = useQuery(
+  const { data, isFetching, isError, refetch } = useQuery(
     ["COUNRTY_DATA", orderBy, search],
     () => {
       const url = new URL(COUNTRY_TABLE_URL);
@@ -211,9 +211,8 @@ function CountriesTable() {
     },
     state: {
       columnFilters,
-      isLoading: isFetching || isRefetching,
       showAlertBanner: isError,
-      showProgressBars: isFetching || isRefetching,
+      showProgressBars: isFetching,
       sorting: orderBy,
     },
     rowVirtualizerInstanceRef, //get access to the virtualizer instance

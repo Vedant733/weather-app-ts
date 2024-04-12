@@ -200,7 +200,10 @@ function Weather() {
               height: "auto",
               width: { xs: "100%", md: "70%" },
               background:
-                getColorFromWeatherId(data?.data?.weather[0].id) + "40",
+                getColorFromWeatherId(
+                  data?.data?.weather[0].id,
+                  data?.data?.sys?.country ?? "IN"
+                ) + "40",
               padding: "24px",
               paddingTop: 0,
             }}
@@ -222,31 +225,37 @@ function Weather() {
               }}
             >
               <WrapperCard
+                country={data?.data?.sys?.country ?? "IN"}
                 bgColor={data?.data?.weather[0].id}
                 title="Pressure"
                 value={`${data?.data?.main.pressure} hPa`}
               ></WrapperCard>
               <WrapperCard
+                country={data?.data?.sys?.country ?? "IN"}
                 bgColor={data?.data?.weather[0].id}
                 title="Humidity"
                 value={`${data?.data?.main.humidity} %`}
               ></WrapperCard>
               <WrapperCard
+                country={data?.data?.sys?.country ?? "IN"}
                 bgColor={data?.data?.weather[0].id}
                 title="Visibility"
                 value={`${data?.data?.visibility} km`}
               ></WrapperCard>
               <WrapperCard
+                country={data?.data?.sys?.country ?? "IN"}
                 bgColor={data?.data?.weather[0].id}
                 title="Wind"
                 value={`${data?.data?.wind.speed} m/s`}
               ></WrapperCard>
               <WrapperCard
+                country={data?.data?.sys?.country ?? "IN"}
                 bgColor={data?.data?.weather[0].id}
                 title="Cloudiness"
                 value={data?.data?.clouds.all}
               ></WrapperCard>
               <WrapperCard
+                country={data?.data?.sys?.country ?? "IN"}
                 bgColor={data?.data?.weather[0].id}
                 title="Max Temperature"
                 value={getCurrentUnit(data?.data?.main.temp_max)}
@@ -263,6 +272,7 @@ interface Props {
   title: string;
   value: ReactNode;
   bgColor: number | undefined;
+  country: string;
 }
 
 function WrapperCard(props: Props) {
@@ -271,7 +281,7 @@ function WrapperCard(props: Props) {
       sx={{
         width: "calc( 100% - 32px )",
         height: "calc( 180px - 32px )",
-        background: getColorFromWeatherId(props.bgColor),
+        background: getColorFromWeatherId(props.bgColor, props.country),
         borderRadius: "12px",
         padding: "16px",
       }}
