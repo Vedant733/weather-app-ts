@@ -1,7 +1,3 @@
-[build]
- command = "npm run build" # or "yarn build" if you're using Yarn
- publish = "build/"
-
 [[redirects]]
  from = "/*"
  to = "/index.html"
